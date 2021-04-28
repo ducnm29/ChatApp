@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChatActivity">
+    <RelativeLayout
+        android:id="@+id/info_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_login">
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/back"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="10dp"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+
+            android:id="@+id/profile_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="12dp"
+            android:layout_toRightOf="@id/back_button"
+            android:src="@mipmap/ic_launcher" />
+        <TextView
+            android:id="@+id/txt_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textColor="#fff"
+            android:text="UserName"
+            android:layout_toRightOf="@+id/profile_image"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="20dp"
+            />
+<!--        <Button-->
+<!--            android:id="@+id/btn_test"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_toRightOf="@id/txt_username"-->
+<!--            android:text="load"-->
+<!--            />-->
+    </RelativeLayout>
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_below="@+id/info_part"
+        android:layout_above="@+id/send_mess_part"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycleview_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    <RelativeLayout
+        android:id="@+id/send_mess_part"
+        android:layout_alignParentBottom="true"
+        android:padding="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <EditText
+            android:id="@+id/edtTypeMess"
+            android:layout_centerVertical="true"
+            android:hint="Type a message..."
+            android:layout_toLeftOf="@id/btn_send"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <ImageView
+            android:id="@+id/btn_send"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/ic_action_send"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"/>
+
+
+    </RelativeLayout>
+
+
+
+
+
+</RelativeLayout>
