@@ -105,6 +105,11 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }else{
             Glide.with(context).load(user.getImageUrl()).into(holder.profileImage);
         }
+        if(user.getStatus().equals("offline")){
+            holder.statusImage.setVisibility(View.GONE);
+        }else{
+            holder.statusImage.setVisibility(View.VISIBLE);
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -112,8 +117,6 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 Log.w("test6",chatSessionId.size()+"");
                 intent.putExtra("chatSessionId",chatSessionIDRes.get(user.getId()));
                 intent.putExtra("count",chatSessionIDRes.get(user.getId()+"count"));
-               // Log.w("test5",chatSessionIDRes.get(user.getId()));
-                //Log.w("test8",chatSessionIDRes.get(user.getId()+"count"));
                 intent.putExtra("userid",userList.get(position).getId());
                 context.startActivity(intent);
             }
@@ -127,11 +130,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder{
         private TextView userName;
-        private ImageView profileImage;
+        private ImageView profileImage,statusImage;
         public ViewHolder(View itemView){
             super(itemView);
             userName = itemView.findViewById(R.id.user_name_row);
             profileImage = itemView.findViewById(R.id.profile_image_user_row);
+            statusImage = itemView.findViewById(R.id.img_status);
         }
     }
 }

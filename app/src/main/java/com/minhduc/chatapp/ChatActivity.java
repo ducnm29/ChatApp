@@ -117,6 +117,7 @@ public class ChatActivity extends AppCompatActivity {
                 showMessage(chatSessionId);
             }
         });
+
     }
     private void anhXa(){
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
@@ -221,6 +222,22 @@ public class ChatActivity extends AppCompatActivity {
         }else{
             Log.w("check2","loi");
         }
+    }
+    private void setStatus(String status) {               // set status for current user
+        DatabaseReference sttRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+        sttRef.child("status").setValue(status);
+    }
+
+    @Override
+    protected void onResume() {                         // set user to online when resume app
+        super.onResume();
+        setStatus("online");
+    }
+
+    @Override
+    protected void onPause() {                        // set user to offline when pause app
+        super.onPause();
+        setStatus("offline");
     }
 
 }

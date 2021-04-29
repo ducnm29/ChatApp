@@ -22,7 +22,7 @@ public class FragmentMenus extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu,container,false);
         list = new ArrayList<>();
-        list.add(new MenuItem(R.drawable.logoutwhite,"Logout"));
+        list.add(new MenuItem(R.drawable.logoutwhite,"Sign out"));
         AdapterMenu adapterMenu = new AdapterMenu(list,getContext());
         recyclerView = (RecyclerView)view.findViewById(R.id.recycle_view_users);
         recyclerView.setHasFixedSize(true);

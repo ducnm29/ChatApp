@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.List;
 
@@ -39,13 +41,26 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.ViewHolder> {
         MenuItem menuItem = list.get(position);
         holder.item_image.setImageResource(menuItem.getImageMenu());
         holder.item_name.setText(menuItem.getMenuName());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (menuItem.getMenuName().equals("Sign out")){
+                    DatabaseReference sttRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
+                    sttRef.child("status").setValue("offline");
+                    FirebaseAuth.getInstance().signOut();
+                    Intent intent = new Intent(v.getContext(),StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    ((Activity)v.getContext()).finish();
+                    v.getContext().startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
         return list.size();
     }
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ViewHolder extends RecyclerView.ViewHolder {
         private ImageView item_image;
         private TextView item_name;
 
@@ -53,14 +68,8 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.ViewHolder> {
             super(itemView);
             item_image = itemView.findViewById(R.id.image_item_menu);
             item_name = itemView.findViewById(R.id.txt_menu_item);
-            itemView.setOnClickListener(this);
+//            itemView.setOnClickListener(this);
         }
-        @Override
-        public void onClick(View v) {
-            FirebaseAuth.getInstance().signOut();
-            Intent intent = new Intent(v.getContext(),StartActivity.class);
-            v.getContext().startActivity(intent);
-            ((Activity)v.getContext()).finish();
-        }
+
     }
 }

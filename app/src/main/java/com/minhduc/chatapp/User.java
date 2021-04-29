@@ -1,14 +1,15 @@
 package com.minhduc.chatapp;
 
 public class User {
-    private String id,username,imageurl,password,email;
+    private String id,username,imageurl,password,email,status;
 
-    public User(String id, String imageurl,String password, String username,String email) {
+    public User(String id, String imageurl,String password, String username,String email,String status) {
         this.id = id;
         this.imageurl = imageurl;
         this.password = password;
         this.username = username;
         this.email = email;
+        this.status=status;
     }
 
     public User() {
@@ -36,6 +37,9 @@ public class User {
     public String getImageUrl() {
         return imageurl;
     }
+    public String getStatus(){
+        return status;
+    }
 
     public void setId(String id) {
         this.id = id;
@@ -50,5 +54,8 @@ public class User {
 
     public void setImageUrl(String imageUrl) {
         this.imageurl = imageUrl;
+    }
+    public void setStatus(String status){
+        this.status = status;
     }
 }

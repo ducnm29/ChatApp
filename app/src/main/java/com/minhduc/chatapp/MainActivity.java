@@ -27,6 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
 
+    String userId;
     CircleImageView profileImage;
     TextView userName;
     FragmentUsers fragmentUsers;
@@ -65,16 +66,12 @@ public class MainActivity extends AppCompatActivity {
     }
     private void readInfo(){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        DatabaseReference myref = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+        userId = firebaseUser.getUid();
+        DatabaseReference myref = FirebaseDatabase.getInstance().getReference("Users").child(userId);
         myref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 User user = snapshot.getValue(User.class);
-//                try {
-//                    assert user!= null;
-//                }catch (Exception e){
-//                    Log.w("loiroi","loi ne`");
-//                }
                 if(user == null){
                     Toast.makeText(MainActivity.this, "Lỗi k đọc được info user!", Toast.LENGTH_SHORT).show();
                 }else{
@@ -93,6 +90,21 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+    private void setStatus(String status) {
+        DatabaseReference sttRef = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        sttRef.child("status").setValue(status);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        setStatus("offline");
+    }
 
 }

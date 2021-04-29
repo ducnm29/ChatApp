@@ -1,24 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/profile_image_user_row"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:src="@mipmap/ic_launcher"
-        android:layout_margin="10dp"
-        />
+        android:layout_margin="10dp" />
 
     <TextView
         android:id="@+id/user_name_row"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:textSize="18sp"
         android:text="Username"
         android:layout_toRightOf="@id/profile_image_user_row"
         android:layout_marginTop="20dp"/>
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/img_status"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:background="@drawable/color_circle"
+        android:layout_toRightOf="@id/profile_image_user_row"
+        android:layout_toEndOf="@id/profile_image_user_row"
+        android:layout_below="@id/user_name_row"
+        android:layout_marginLeft="-20dp"
+        android:visibility="gone" />
 
 </RelativeLayout>
