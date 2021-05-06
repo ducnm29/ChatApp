@@ -65,8 +65,6 @@ public class ChatActivity extends AppCompatActivity {
         myref = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
         String chatSessionId1 = intent.getStringExtra("chatSessionId");
         chatSessionId = intent.getStringExtra("chatSessionId");
-//        count = Integer.parseInt(intent.getStringExtra("count"))+1;
-//        Log.w("test4",chatSessionId1);
         getChatSessionId(sender);                                                        //lay id phien chat
         myref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -97,12 +95,6 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
-//        btnTest.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                showMessage(chatSessionId);
-//            }
-//        });
         imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

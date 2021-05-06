@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView userName;
     FragmentUsers fragmentUsers;
     FragmentMenus fragmentMenus;
+    FragmentChats fragmentChats;
     BottomNavigationView bottomNavigationView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,22 +40,24 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         takeControls();
         readInfo();
+        fragmentChats = new FragmentChats();
         fragmentMenus = new FragmentMenus();
         fragmentUsers = new FragmentUsers();
+        openFragment(fragmentChats);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                FragmentManager fragmentManager = getFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                 switch (item.getItemId()){
+                    case R.id.chats:
+                        openFragment(fragmentChats);
+                        break;
                     case R.id.menu:
-                        fragmentTransaction.replace(R.id.frame_main,fragmentMenus);
+                        openFragment(fragmentMenus);
                         break;
                     case R.id.users:
-                        fragmentTransaction.replace(R.id.frame_main,fragmentUsers);
+                        openFragment(fragmentUsers);
                         break;
                 }
-                fragmentTransaction.commit();
                 return true;
             }
         });
@@ -105,6 +108,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         setStatus("offline");
+    }
+    private void openFragment(final Fragment fragment){
+        FragmentManager fragmentManager = getFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.frame_main,fragment);
+        fragmentTransaction.commit();
     }
 
 }
