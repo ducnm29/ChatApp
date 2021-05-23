@@ -28,8 +28,9 @@ public class FragmentChats extends Fragment {
     User user;
     List<User> userList,allUserList;
     RecyclerView recyclerView;
-    UserAdapter userAdapter;
+    ChatAdapter chatAdapter;
     String currentUser;
+    HashMap<String,String> lastMessRes;
 
     @Nullable
     @Override
@@ -37,12 +38,14 @@ public class FragmentChats extends Fragment {
         View view = inflater.inflate(R.layout.fragment_users,container,false);
         userList = new ArrayList<>();
         allUserList = new ArrayList<>();
+        lastMessRes = new HashMap<>();
         recyclerView = (RecyclerView)view.findViewById(R.id.recycle_view_users);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         readAllUser();
         readUser();
+        refreshUser();
         return view;
     }
     public void readUser(){
@@ -52,22 +55,27 @@ public class FragmentChats extends Fragment {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 userList.clear();
                 for(DataSnapshot dataSnapshot:snapshot.getChildren()){
+                    ChatSession chatSession = dataSnapshot.getValue(ChatSession.class);
                     HashMap<String,Object> hashMap = (HashMap<String, Object>) dataSnapshot.getValue();
                     if(hashMap!= null){
                         Log.w("alo",hashMap.get("idUser1").toString());
                         User user1 = getUserByID(hashMap.get("idUser1").toString());
                         User user2 = getUserByID(hashMap.get("idUser2").toString());
                         if(hashMap.get("idUser1").toString().equals(currentUser)){
+                            List<Message> messages = chatSession.getMessageList();
+                            lastMessRes.put(user2.getId(),messages.get(messages.size()-1).getMessage());
                             userList.add(user2);
                             Log.w("alo",user2.getId()+"haha");
                         }else if(hashMap.get("idUser2").toString().equals(currentUser)){
+                            List<Message> messages = chatSession.getMessageList();
+                            lastMessRes.put(user1.getId(),messages.get(messages.size()-1).getMessage());
                             userList.add(user1);
                             Log.w("alo",user1.getId()+"hahe");
                         }
                     }
                 }
-                userAdapter = new UserAdapter(userList,getContext());
-                recyclerView.setAdapter(userAdapter);
+                chatAdapter = new ChatAdapter(userList,getContext(),lastMessRes);
+                recyclerView.setAdapter(chatAdapter);
             }
 
             @Override
@@ -109,6 +117,22 @@ public class FragmentChats extends Fragment {
                 Log.w("loi","loi r");
             }
         });
+    }
+    private void refreshUser(){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        DatabaseReference myref = FirebaseDatabase.getInstance().getReference("Users");
+        myref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                readAllUser();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        readUser();
     }
 
 }

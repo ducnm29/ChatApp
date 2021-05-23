@@ -18,6 +18,7 @@
         android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxWidth="300dp"
         android:textSize="20sp"
         android:textColor="#ffff"
         android:background="@drawable/right_message_bg"

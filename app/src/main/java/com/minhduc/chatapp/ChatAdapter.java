@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
+public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.ViewHolder> {
     private List<User> userList;
     private List<String> chatSessionId,count;
     private Context context;
@@ -35,11 +35,12 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private FirebaseUser firebaseUser;
     private String chatSessionId1 = " ",sender,count1=" ";
     private boolean check;
-    private HashMap<String,String> chatSessionIDRes;
+    private HashMap<String,String> chatSessionIDRes,lastMessage,lastMessageRes;
 
-    public UserAdapter(List<User> userList, Context context) {
+    public ChatAdapter(List<User> userList, Context context,HashMap<String,String>lastMessageRes) {
         this.userList = userList;
         this.context = context;
+        this.lastMessageRes = lastMessageRes;
     }
 
     @NonNull
@@ -47,9 +48,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater layoutInflater = LayoutInflater.from(context);
-        View userView  = layoutInflater.inflate(R.layout.user_row,parent,false);
+        View userView  = layoutInflater.inflate(R.layout.user_chat_row,parent,false);
         chatSessionId = new ArrayList<>();
         chatSessionIDRes = new HashMap<>();
+        lastMessage  = new HashMap<>();
         count = new ArrayList<>();
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         sender = firebaseUser.getUid();
@@ -76,10 +78,10 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                                 check = false;
                             }
                         }
-                            if (check) {
-                                chatSessionIDRes.put(receiver," ");
-                                chatSessionIDRes.put(receiver + "count","1");
-                            }
+                        if (check) {
+                            chatSessionIDRes.put(receiver," ");
+                            chatSessionIDRes.put(receiver + "count","1");
+                        }
                     }catch (Exception e){
                         Log.w("loir",e.toString());
                     }
@@ -90,6 +92,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
                 }
             });
         }
+        //readLastMess();
         return new ViewHolder(userView);
     }
 
@@ -97,6 +100,8 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = userList.get(position);
         holder.userName.setText(user.getUsername());
+       // Log.w("?", lastMessage.get(user.getId()));
+        holder.lastMess.setText(lastMessageRes.get(user.getId()));
         Log.w("test7","okzo");
         if(user.getImageUrl().equals("default")){
             holder.profileImage.setImageResource(R.drawable.user);
@@ -108,6 +113,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         }else{
             holder.statusImage.setVisibility(View.VISIBLE);
         }
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,13 +133,38 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
-        private TextView userName;
+        private TextView userName,lastMess;
         private ImageView profileImage,statusImage;
         public ViewHolder(View itemView){
             super(itemView);
-            userName = itemView.findViewById(R.id.user_name_row);
-            profileImage = itemView.findViewById(R.id.profile_image_user_row);
+            userName = itemView.findViewById(R.id.user_chat_name_row);
+            profileImage = itemView.findViewById(R.id.profile_image_user_chat_row);
             statusImage = itemView.findViewById(R.id.img_status);
+            lastMess = itemView.findViewById(R.id.last_mess_chat_row);
         }
     }
+    void readLastMess(){
+        for(User user:userList){
+            String sessId = chatSessionIDRes.get(user.getId());
+            Log.w("testChat",sessId);
+            DatabaseReference lastMessRef = FirebaseDatabase.getInstance().getReference("Chats")
+                    .child(sessId).child("messageList");
+            lastMessRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    for(DataSnapshot data:snapshot.getChildren()){
+                        HashMap<String,Object> hashMap = (HashMap<String, Object>) data.getValue();
+                        String lastMess = hashMap.get("message").toString();
+                        lastMessage.put(user.getId(),lastMess);
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+        }
+    }
+
 }

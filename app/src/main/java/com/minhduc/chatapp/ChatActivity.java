@@ -128,16 +128,18 @@ public class ChatActivity extends AppCompatActivity {
     }
     private void sendMessage(String message,String idSender,String idReceiver,String chatSessionId){
         if(chatSessionId.equals(" ")){
-            List<Message> list = new ArrayList<>();
-            list.add(new Message(idSender,idReceiver,message,new SimpleDateFormat("hh:mm:ss-dd/MM/yyyy").format(new Date()),"default"));
+            //List<Message> list = new ArrayList<>();
+//            list.add(new Message(idSender,idReceiver,message,new SimpleDateFormat("hh:mm:ss-dd/MM/yyyy").format(new Date()),"default"));
+            Message message1 = new Message(idSender,idReceiver,message,new SimpleDateFormat("hh:mm:ss-dd/MM/yyyy").format(new Date()),"default");
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("idUser1",idSender);
             hashMap.put("idUser2",idReceiver);
             hashMap.put("count",1);
-            hashMap.put("messageList",list);
+            //hashMap.put("messageList",message1);
             String id = chatRef.push().getKey();
             hashMap.put("idSession",id);
             chatRef.child(id).setValue(hashMap);
+            chatRef.child(id).child("messageList").child("1").setValue(message1);
             edtMessage.setText("");
             showMessage(id);
         }else{

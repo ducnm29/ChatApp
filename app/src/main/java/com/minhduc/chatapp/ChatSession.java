@@ -9,7 +9,6 @@ public class ChatSession {
     private List<Message> messageList;
 
     public ChatSession() {
-        messageList = new ArrayList<>();
     }
 
     public ChatSession(String idUser1, String idUser2, int count, List<Message> messageList) {
