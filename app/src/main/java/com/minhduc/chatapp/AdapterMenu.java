@@ -47,9 +47,9 @@ public class AdapterMenu extends RecyclerView.Adapter<AdapterMenu.ViewHolder> {
                 if (menuItem.getMenuName().equals("Sign out")){
                     DatabaseReference sttRef = FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid());
                     sttRef.child("status").setValue("offline");
-                    FirebaseAuth.getInstance().signOut();
                     Intent intent = new Intent(v.getContext(),StartActivity.class).setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     ((Activity)v.getContext()).finish();
+                    FirebaseAuth.getInstance().signOut();
                     v.getContext().startActivity(intent);
                 }
             }

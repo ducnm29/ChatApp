@@ -105,8 +105,8 @@ public class FragmentChats extends Fragment {
                 for(DataSnapshot data:snapshot.getChildren()){
                     User user = data.getValue(User.class);
                     assert user!= null;
-                    assert firebaseUser!= null;
-                    if(!user.getId().equals(firebaseUser.getUid())){
+                    //assert
+                    if(firebaseUser!= null&&!user.getId().equals(firebaseUser.getUid())){
                         allUserList.add(user);
                     }
                 }
