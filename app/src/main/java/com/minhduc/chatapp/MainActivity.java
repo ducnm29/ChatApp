@@ -7,8 +7,6 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +20,11 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.minhduc.chatapp.fragment.FragmentChats;
+import com.minhduc.chatapp.fragment.FragmentHome;
+import com.minhduc.chatapp.fragment.FragmentMenus;
+import com.minhduc.chatapp.fragment.FragmentUsers;
+import com.minhduc.chatapp.model.User;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -30,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     String userId;
     CircleImageView profileImage;
     TextView userName;
+    public static User user;
+    FragmentHome fragmentHome;
     FragmentUsers fragmentUsers;
     FragmentMenus fragmentMenus;
     FragmentChats fragmentChats;
@@ -40,14 +45,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         takeControls();
         readInfo();
+        fragmentHome = new FragmentHome();
         fragmentChats = new FragmentChats();
         fragmentMenus = new FragmentMenus();
         fragmentUsers = new FragmentUsers();
-        openFragment(fragmentChats);
+        openFragment(fragmentHome);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.home:
+                        openFragment(fragmentHome);
+                        break;
                     case R.id.chats:
                         openFragment(fragmentChats);
                         break;
@@ -74,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         myref.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                User user = snapshot.getValue(User.class);
+                user = snapshot.getValue(User.class);
                 if(user == null){
                     Toast.makeText(MainActivity.this, "Lỗi k đọc được info user!", Toast.LENGTH_SHORT).show();
                 }else{

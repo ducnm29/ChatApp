@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -26,6 +25,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.minhduc.chatapp.adapter.MessageAdater;
+import com.minhduc.chatapp.model.Message;
+import com.minhduc.chatapp.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -135,7 +137,6 @@ public class ChatActivity extends AppCompatActivity {
             hashMap.put("idUser1",idSender);
             hashMap.put("idUser2",idReceiver);
             hashMap.put("count",1);
-            //hashMap.put("messageList",message1);
             String id = chatRef.push().getKey();
             hashMap.put("idSession",id);
             chatRef.child(id).setValue(hashMap);

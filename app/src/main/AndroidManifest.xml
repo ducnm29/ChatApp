@@ -9,7 +9,10 @@
         android:roundIcon="@mipmap/ic_launcher_icon_dchat"
         android:supportsRtl="true"
         android:theme="@style/Theme.ChatApp">
-        <activity android:name=".StartActivity"></activity>
+        <activity
+            android:name=".AddNewfeedActivity"
+            android:exported="false" />
+        <activity android:name=".StartActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".MainActivity" />
         <activity android:name=".RegisterActivity" />
