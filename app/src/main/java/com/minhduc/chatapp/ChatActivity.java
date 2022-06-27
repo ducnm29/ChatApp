@@ -28,6 +28,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.minhduc.chatapp.adapter.MessageAdater;
 import com.minhduc.chatapp.model.Message;
 import com.minhduc.chatapp.model.User;
+import com.minhduc.chatapp.notification.SendNotification;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -52,6 +53,7 @@ public class ChatActivity extends AppCompatActivity {
     String receiver,chatSessionId=" ",imageUrlReceiver,test,sender;
     RecyclerView recyclerView;
     List<Message> messageList;
+    String receiverToken,oldMess;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +69,7 @@ public class ChatActivity extends AppCompatActivity {
         myref = FirebaseDatabase.getInstance().getReference("Users").child(receiver);
         String chatSessionId1 = intent.getStringExtra("chatSessionId");
         chatSessionId = intent.getStringExtra("chatSessionId");
+        getReceiverToken(receiver);
         getChatSessionId(sender);                                                        //lay id phien chat
         myref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -94,6 +97,8 @@ public class ChatActivity extends AppCompatActivity {
                     Toast.makeText(ChatActivity.this, "Message is empty!", Toast.LENGTH_SHORT).show();
                 }else{
                     sendMessage(edtMessage.getText().toString(),sender,receiver,chatSessionId);
+                    SendNotification sendNotification = new SendNotification(receiverToken,oldMess,ChatActivity.this);
+                    sendNotification.sendNotificationToUser();
                 }
             }
         });
@@ -113,6 +118,25 @@ public class ChatActivity extends AppCompatActivity {
         });
 
     }
+
+    private void getReceiverToken(String receiver) {
+        DatabaseReference tokenRef = FirebaseDatabase.getInstance().getReference("Token");
+        tokenRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                HashMap<String,String> map = (HashMap<String, String>) snapshot.getValue();
+                receiverToken = map.get(receiver);
+                Log.w("testToken",receiverToken);
+                Toast.makeText(getApplicationContext(),receiverToken,Toast.LENGTH_LONG);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
     private void anhXa(){
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         edtMessage   = (EditText)findViewById(R.id.edtTypeMess);
@@ -121,7 +145,6 @@ public class ChatActivity extends AppCompatActivity {
         imgBack      = (ImageView)findViewById(R.id.back_button);
         btnSend      = (ImageView)findViewById(R.id.btn_send);
         recyclerView = (RecyclerView)findViewById(R.id.recycleview_message);
-//        btnTest = (Button)findViewById(R.id.btn_test);
         messageList = new ArrayList<>();
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -129,9 +152,8 @@ public class ChatActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
     }
     private void sendMessage(String message,String idSender,String idReceiver,String chatSessionId){
+        oldMess = message;
         if(chatSessionId.equals(" ")){
-            //List<Message> list = new ArrayList<>();
-//            list.add(new Message(idSender,idReceiver,message,new SimpleDateFormat("hh:mm:ss-dd/MM/yyyy").format(new Date()),"default"));
             Message message1 = new Message(idSender,idReceiver,message,new SimpleDateFormat("hh:mm:ss-dd/MM/yyyy").format(new Date()),"default");
             HashMap<String,Object> hashMap = new HashMap<>();
             hashMap.put("idUser1",idSender);

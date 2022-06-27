@@ -1,6 +1,7 @@
 package com.minhduc.chatapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.minhduc.chatapp.GlideApp;
+import com.minhduc.chatapp.ProfilePageActivity;
 import com.minhduc.chatapp.R;
 import com.minhduc.chatapp.model.NewFeed;
 import java.util.List;
@@ -40,9 +42,17 @@ public class NewfeedAdapter extends RecyclerView.Adapter<NewfeedAdapter.NewfeedH
             Log.w("testrecycle",newFeed.getCaption());
             if(!newFeed.getImgLink().equals("")){
                 FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference imgRef = storage.getReference().child("images/newfeed/"+newFeed.getImgLink());
+                StorageReference imgRef = storage.getReference().child("images").child("newfeed").child(newFeed.getImgLink());
                 GlideApp.with(context).load(imgRef).into(holder.imgNewfeed);
             }
+            holder.imgProfile.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(context, ProfilePageActivity.class);
+                    intent.putExtra("user",newFeed.getUser());
+                    context.startActivity(intent);
+                }
+            });
         }
     }
 

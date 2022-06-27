@@ -26,6 +26,7 @@ import com.minhduc.chatapp.model.Message;
 import com.minhduc.chatapp.model.User;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -40,7 +41,7 @@ public class FragmentChats extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_users,container,false);
+        View view = inflater.inflate(R.layout.fragment_chats,container,false);
         userList = new ArrayList<>();
         allUserList = new ArrayList<>();
         lastMessRes = new HashMap<>();
@@ -83,8 +84,10 @@ public class FragmentChats extends Fragment {
                         }
                     }
                 }
+                //Collections.reverse(userList);
                 chatAdapter = new ChatAdapter(userList,getContext(),lastMessRes);
                 recyclerView.setAdapter(chatAdapter);
+                chatAdapter.notifyDataSetChanged();
             }
 
             @Override

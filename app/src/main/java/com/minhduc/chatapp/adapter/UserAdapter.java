@@ -38,10 +38,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     private String chatSessionId1 = " ",sender,count1=" ";
     private boolean check;
     private HashMap<String,String> chatSessionIDRes;
+    private ArrayList<User> arrayList;
 
     public UserAdapter(List<User> userList, Context context) {
         this.userList = userList;
         this.context = context;
+        this.arrayList = new ArrayList<User>();
+        this.arrayList.addAll(userList);
     }
 
     @NonNull
@@ -137,5 +140,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
             profileImage = itemView.findViewById(R.id.profile_image_user_row);
             statusImage = itemView.findViewById(R.id.img_status);
         }
+    }
+
+    public void filter(String text){
+        text = text.toLowerCase();
+        userList.clear();
+        if(text.length() == 0){
+            userList.addAll(arrayList);
+        }else{
+            for(User user: arrayList){
+                if(user.getUsername().toLowerCase().contains(text)){
+                    userList.add(user);
+                }
+            }
+        }
+        notifyDataSetChanged();
     }
 }

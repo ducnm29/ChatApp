@@ -1,6 +1,8 @@
 package com.minhduc.chatapp.model;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
     private String id,username,imageurl,password,email,status;
 
     public User(String id, String imageurl,String password, String username,String email,String status) {
